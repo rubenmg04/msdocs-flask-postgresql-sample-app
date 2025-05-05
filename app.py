@@ -70,6 +70,17 @@ def test_insert():
     db.session.commit()
     return "Imagen de prueba añadida correctamente"
 
+@app.route('/clear-db', methods=['GET'])
+def clear_db():
+    try:
+        # Elimina todas las filas de la tabla Imagen
+        db.session.query(Imagen).delete()
+        db.session.commit()
+        return redirect(url_for('index'))  # Redirige al índice después de limpiar
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 400
+
+
 
 @app.route('/favicon.ico')
 def favicon():

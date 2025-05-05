@@ -1,36 +1,41 @@
 {% extends "base.html" %}
+
 {% block title %}Listado de Imágenes{% endblock %}
+
 {% block content %}
+    <h2 class="mb-4">Resultados del Análisis de Imágenes</h2>
 
-<h2 class="mb-4">Resultados del Análisis de Imágenes</h2>
+    <!-- Botón para limpiar la base de datos -->
+    <form action="{{ url_for('clear_db') }}" method="get">
+        <button type="submit" class="btn btn-danger mb-4">Limpiar Base de Datos</button>
+    </form>
 
-{% if imagenes %}
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th scope="col">Nombre de Imagen</th>
-                <th scope="col">Fecha</th>
-                <th scope="col">Rojo</th>
-                <th scope="col">Verde</th>
-                <th scope="col">Azul</th>
-                <th scope="col">Total de Píxeles</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for img in imagenes %}
-            <tr>
-                <td>{{ img.nombre }}</td>
-                <td>{{ img.fecha }}</td>
-                <td>{{ img.rojo }}</td>
-                <td>{{ img.verde }}</td>
-                <td>{{ img.azul }}</td>
-                <td>{{ img.total }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-{% else %}
-    <div class="alert alert-info">No hay imágenes procesadas todavía.</div>
-{% endif %}
-
+    {% if imagenes %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Nombre de Imagen</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Rojo</th>
+                    <th scope="col">Verde</th>
+                    <th scope="col">Azul</th>
+                    <th scope="col">Total de Píxeles</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for img in imagenes %}
+                <tr>
+                    <td>{{ img.nombre }}</td>
+                    <td>{{ img.fecha }}</td>
+                    <td>{{ img.rojo }}</td>
+                    <td>{{ img.verde }}</td>
+                    <td>{{ img.azul }}</td>
+                    <td>{{ img.total }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-info">No hay imágenes procesadas todavía.</div>
+    {% endif %}
 {% endblock %}
