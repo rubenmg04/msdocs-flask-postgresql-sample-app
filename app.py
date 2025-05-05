@@ -1,6 +1,5 @@
 import os
 from datetime import datetime
-import pytz  # Importar pytz para gestionar la zona horaria
 from flask import Flask, redirect, render_template, request, jsonify, send_from_directory, url_for
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
@@ -29,9 +28,6 @@ migrate = Migrate(app, db)
 # Import models AFTER db init
 from models import Imagen
 
-# Zona horaria de España (Madrid)
-spain_tz = pytz.timezone('Europe/Madrid')
-
 
 @app.route('/', methods=['GET'])
 def index():
@@ -45,16 +41,9 @@ def index():
 def upload_image_data():
     data = request.get_json()
     try:
-        print(f"Fecha recibida (original): {data['fecha']}")  # Depuración
-        # Convertir la fecha de la imagen de UTC a la zona horaria de España
-        fecha_utc = datetime.fromisoformat(data['fecha'])
-        fecha_spain = fecha_utc.replace(tzinfo=pytz.utc).astimezone(spain_tz)
-        
-        print(f"Fecha convertida a España: {fecha_spain}")  # Depuración
-        
         imagen = Imagen(
             nombre=data['nombre'],
-            fecha=fecha_spain,  # Usar la fecha en zona horaria de España
+            fecha=datetime.fromisoformat(data['fecha']),
             rojo=data['rojo'],
             verde=data['verde'],
             azul=data['azul'],
@@ -62,25 +51,16 @@ def upload_image_data():
         )
         db.session.add(imagen)
         db.session.commit()
-        
-        print(f"Imagen guardada con fecha: {imagen.fecha}")  # Depuración
-        
         return jsonify({"status": "ok", "message": "Imagen guardada correctamente"}), 201
     except Exception as e:
-        print(f"Error: {str(e)}")  # Depuración
         return jsonify({"status": "error", "message": str(e)}), 400
 
 
 @app.route('/test-insert')
 def test_insert():
-    # Obtener la hora actual y convertirla a la zona horaria de España
-    fecha_spain = datetime.now(pytz.timezone('Europe/Madrid'))
-
-    print(f"Fecha de prueba (España): {fecha_spain}")  # Depuración
-    
     imagen = Imagen(
         nombre='imagen_prueba.bmp',
-        fecha=fecha_spain,
+        fecha=datetime.now(),
         rojo=1000,
         verde=2000,
         azul=3000,
@@ -88,9 +68,6 @@ def test_insert():
     )
     db.session.add(imagen)
     db.session.commit()
-    
-    print(f"Imagen de prueba añadida con fecha: {fecha_spain}")  # Depuración
-    
     return "Imagen de prueba añadida correctamente"
 
 
