@@ -47,8 +47,7 @@ def upload_image_data_subida():
             rojo=data['rojo'],
             verde=data['verde'],
             azul=data['azul'],
-            total=data['total'],
-            usuario=data['usuario'] 
+            total=data['total']
         )
         db.session.add(imagen)
         db.session.commit()
@@ -60,7 +59,6 @@ def upload_image_data_subida():
 @app.route('/test-insert')
 def test_insert():
     imagen = Imagen(
-        usuario = 'Rubén',
         nombre='imagen_prueba.bmp',
         fecha=datetime.now(),
         rojo=1000,
@@ -97,19 +95,18 @@ def upload_image_data():
     data = request.get_json()
 
     # Verificar que los datos necesarios están presentes
-    if not all(key in data for key in ['nombre', 'fecha', 'rojo', 'verde', 'azul', 'total', 'usuario']):
+    if not all(key in data for key in ['nombre', 'fecha', 'rojo', 'verde', 'azul', 'total']):
         return jsonify({"status": "error", "message": "Faltan campos en los datos enviados"}), 400
 
     try:
         # Guardar los datos de la imagen en la base de datos
         imagen = Imagen(
             nombre=data['nombre'],
-            fecha=datetime.fromisoformat(data['fecha']),
+            fecha=datetime.fromisoformat(data['fecha']),  # Asegurarse de que la fecha esté en formato ISO
             rojo=data['rojo'],
             verde=data['verde'],
             azul=data['azul'],
-            total=data['total'],
-            usuario=data['usuario'] 
+            total=data['total']
         )
 
         # Agregar la imagen a la base de datos y confirmar la transacción
