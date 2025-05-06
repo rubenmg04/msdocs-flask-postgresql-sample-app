@@ -38,7 +38,7 @@ def index():
 
 @app.route('/upload', methods=['POST'])
 @csrf.exempt
-def upload_image_data():
+def upload_image_data_subida():
     data = request.get_json()
     try:
         imagen = Imagen(
@@ -80,7 +80,46 @@ def clear_db():
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 400
 
+@app.route('/imagenes')
+def imagenes():
+    imagenes = Imagen.query.order_by(Imagen.fecha.desc()).all()
+    return render_template('imagenes.html', imagenes=imagenes)
 
+@app.route('/subida', methods=['POST'])
+@csrf.exempt
+def upload_image_data():
+    """
+    Ruta para recibir los datos de imagen enviados como JSON,
+    almacenarlos en la base de datos y devolver una respuesta JSON.
+    """
+    data = request.get_json()
+
+    # Verificar que los datos necesarios están presentes
+    if not all(key in data for key in ['nombre', 'fecha', 'rojo', 'verde', 'azul', 'total']):
+        return jsonify({"status": "error", "message": "Faltan campos en los datos enviados"}), 400
+
+    try:
+        # Guardar los datos de la imagen en la base de datos
+        imagen = Imagen(
+            nombre=data['nombre'],
+            fecha=datetime.fromisoformat(data['fecha']),  # Asegurarse de que la fecha esté en formato ISO
+            rojo=data['rojo'],
+            verde=data['verde'],
+            azul=data['azul'],
+            total=data['total']
+        )
+
+        # Agregar la imagen a la base de datos y confirmar la transacción
+        db.session.add(imagen)
+        db.session.commit()
+
+        # Responder con un mensaje de éxito
+        return jsonify({"status": "ok", "message": "Imagen guardada correctamente"}), 201
+
+    except Exception as e:
+        # En caso de error, devolver el mensaje de error
+        return jsonify({"status": "error", "message": str(e)}), 400
+    
 
 @app.route('/favicon.ico')
 def favicon():
