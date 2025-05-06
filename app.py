@@ -57,8 +57,8 @@ def upload_image_data_subida():
         return jsonify({"status": "error", "message": str(e)}), 400
 
 
-@app.route('/test-insert')
-def test_insert():
+@app.route('/test-insert1')
+def test_insert1():
     imagen = Imagen(
         usuario = 'Rubén',
         nombre='imagen_prueba.bmp',
@@ -67,6 +67,21 @@ def test_insert():
         verde=2000,
         azul=3000,
         total=6000
+    )
+    db.session.add(imagen)
+    db.session.commit()
+    return "Imagen de prueba añadida correctamente"
+
+@app.route('/test-insert2')
+def test_insert2():
+    imagen = Imagen(
+        usuario = 'Sandra',
+        nombre='imagen_prueba2.bmp',
+        fecha=datetime.now(),
+        rojo=900,
+        verde=200,
+        azul=4000,
+        total=5100
     )
     db.session.add(imagen)
     db.session.commit()
