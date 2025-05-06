@@ -3,41 +3,48 @@
 {% block title %}Listado de Imágenes{% endblock %}
 
 {% block content %}
-    <h2 class="mb-4">Resultados del Análisis de Imágenes</h2>
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-primary">Análisis de Imágenes BMP</h1>
+        <p class="lead text-muted">Consulta detallada de los colores detectados en cada imagen procesada</p>
+    </div>
 
-    <!-- Botón para limpiar la base de datos -->
-    <form action="{{ url_for('clear_db') }}" method="get">
-        <button type="submit" class="btn btn-danger mb-4">Limpiar Base de Datos</button>
-    </form>
+    <div class="d-flex justify-content-between mb-4">
+        <form action="{{ url_for('clear_db') }}" method="get">
+            <button type="submit" class="btn btn-danger">Limpiar Base de Datos</button>
+        </form>
+        <a href="/" class="btn btn-secondary">Volver al inicio</a>
+    </div>
 
     {% if imagenes %}
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th scope="col">Nombre Usuario</th>
-                    <th scope="col">Nombre de Imagen</th>
-                    <th scope="col">Fecha</th>
-                    <th scope="col">Rojo</th>
-                    <th scope="col">Verde</th>
-                    <th scope="col">Azul</th>
-                    <th scope="col">Total de Píxeles</th>
-                </tr>
-            </thead>
-            <tbody>
-            {% for img in imagenes %}
-                <tr>
-                    <td>{{ img.usuario }}</td>
-                    <td>{{ img.nombre }}</td>
-                    <td>{{ img.fecha }}</td>
-                    <td>{{ img.rojo }}</td>
-                    <td>{{ img.verde }}</td>
-                    <td>{{ img.azul }}</td>
-                    <td>{{ img.total }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table id="tablaImagenes" class="table table-striped table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Nombre de Imagen</th>
+                        <th>Fecha</th>
+                        <th style="color:red;">Rojo</th>
+                        <th style="color:green;">Verde</th>
+                        <th style="color:blue;">Azul</th>
+                        <th>Total de Píxeles</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for img in imagenes %}
+                    <tr>
+                        <td>{{ img.usuario }}</td>
+                        <td>{{ img.nombre }}</td>
+                        <td>{{ img.fecha.strftime("%Y-%m-%d %H:%M:%S") }}</td>
+                        <td style="color:red;">{{ img.rojo }}</td>
+                        <td style="color:green;">{{ img.verde }}</td>
+                        <td style="color:blue;">{{ img.azul }}</td>
+                        <td><strong>{{ img.total }}</strong></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
-        <div class="alert alert-info">No hay imágenes procesadas todavía.</div>
+        <div class="alert alert-info text-center">No hay imágenes procesadas todavía.</div>
     {% endif %}
 {% endblock %}
