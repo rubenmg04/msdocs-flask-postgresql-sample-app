@@ -14,6 +14,7 @@
         <table class="table table-striped">
             <thead>
                 <tr>
+                    <th scope="col">Nombre Usuario</th>
                     <th scope="col">Nombre de Imagen</th>
                     <th scope="col">Fecha</th>
                     <th scope="col">Rojo</th>
@@ -25,6 +26,7 @@
             <tbody>
             {% for img in imagenes %}
                 <tr>
+                    <td>{{ img.usuario }}</td>
                     <td>{{ img.nombre }}</td>
                     <td>{{ img.fecha }}</td>
                     <td>{{ img.rojo }}</td>
