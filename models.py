@@ -10,7 +10,7 @@ class Imagen(db.Model):
     verde = Column(Integer, nullable=False)
     azul = Column(Integer, nullable=False)
     total = Column(Integer, nullable=False)
-    usuario = Column(String(100), nullable=False)  # <- NUEVO
+    usuario = Column(String(100), nullable=False)  
 
     def __str__(self):
         return f"{self.nombre} ({self.fecha})"
